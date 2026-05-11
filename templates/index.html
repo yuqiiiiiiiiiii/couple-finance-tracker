@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>共同記帳</title>
+
+<style>
+
+body{
+    font-family: "Arial";
+    background: linear-gradient(180deg, #f4f6f9 0%, #eef2f7 100%);
+    margin:0;
+    padding:30px;
+    color:#333;
+}
+
+/* 標題 */
+h1{
+    margin-bottom:10px;
+    letter-spacing:1px;
+}
+
+/* 上方資訊卡 */
+.top-info{
+    background:white;
+    padding:18px;
+    border-radius:16px;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+}
+
+/* 金額區 */
+p{
+    margin:6px 0;
+}
+
+/* 按鈕 */
+button{
+    margin:6px;
+    padding:10px 16px;
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg, #3498db, #5dade2);
+    color:white;
+    font-weight:bold;
+    transition:0.2s;
+    box-shadow:0 4px 10px rgba(52,152,219,0.2);
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(52,152,219,0.3);
+}
+
+/* links */
+a{
+    text-decoration:none;
+    margin-right:12px;
+    color:#555;
+    font-weight:500;
+}
+
+a:hover{
+    color:#000;
+}
+
+/* 卡片 */
+.card{
+    background:white;
+    border-radius:16px;
+    padding:14px 16px;
+    margin:12px 0;
+    box-shadow:0 6px 18px rgba(0,0,0,0.05);
+    transition:0.2s;
+}
+
+.card:hover{
+    transform:translateY(-2px);
+}
+
+/* 收入 / 支出色條 */
+.income{
+    border-left:6px solid #2ecc71;
+}
+
+.expense{
+    border-left:6px solid #e74c3c;
+}
+
+/* tag */
+.tag{
+    display:inline-block;
+    padding:4px 10px;
+    border-radius:20px;
+    font-size:12px;
+    margin-top:8px;
+}
+
+.green{
+    background:#eafaf1;
+    color:#27ae60;
+}
+
+.gray{
+    background:#f2f2f2;
+    color:#666;
+}
+
+/* 區塊標題 */
+.section-title{
+    margin-top:25px;
+    font-size:18px;
+}
+
+/* 金額強調 */
+.card b{
+    font-size:16px;
+}
+
+/* 讓整體更集中 */
+#expenseSection, #incomeSection{
+    max-width:700px;
+    margin:auto;
+}
+
+.top-info{
+    background:white;
+    padding:18px;
+    border-radius:16px;
+    margin-bottom:20px;
+    box-shadow:0 8px 25px rgba(0,0,0,0.06);
+
+    width:100%;          /* ⭐滿版 */
+    max-width:none;      /* ❌取消限制 */
+    margin:0 0 20px 0;   /* ⭐靠左 */
+}
+
+/* 左對齊主結構 */
+.user-header{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    justify-content:flex-start; /* ⭐重點：左對齊 */
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:linear-gradient(135deg,#3498db,#5dade2);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    font-size:20px;
+    font-weight:bold;
+    box-shadow:0 5px 12px rgba(52,152,219,0.3);
+}
+
+.user-info{
+    text-align:left; /* ⭐重點 */
+}
+
+.welcome{
+    font-size:16px;
+    margin-bottom:6px;
+    text-align:left;
+}
+
+.meta{
+    font-size:12px;
+    color:#777;
+    text-align:left;
+    line-height:1.6;
+}
+</style>
+</head>
+
+<body>
+
+<h1>💑 共同記帳系統</h1>
+
+<div class="top-info">
+
+    <div class="user-header">
+
+        <div class="avatar">
+            {{ username[0] }}
+        </div>
+
+        <div class="user-info">
+
+            <div class="welcome">
+                👋 歡迎回來，<b>{{ username }}</b>
+            </div>
+
+            <div class="meta">
+                <span>🆔 User id: {{ user_id }}</span>
+                <span>💑 Couple id: {{ couple_id }}</span>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<h3>📅 {{ monthly.year }} / {{ monthly.month }}</h3>
+
+<p>💸 本月支出：{{ monthly.total }}</p>
+<p>💵 收入：{{ total_income }}</p>
+<p>🏦 餘額：{{ balance }}</p>
+
+<hr>
+
+<h3>💑 結算</h3>
+<p style="color:#3498db;">
+    {{ summary }}
+</p>
+
+<hr>
+
+<a href="/add">➕ 新增記帳</a>
+<a href="/couple-link-page">🔗 綁定關係</a>
+<a href="/logout" style="color:red;">🚪 登出</a>
+
+<hr>
+
+<!-- 切換 -->
+<button onclick="showSection('expense')">💸 支出</button>
+<button onclick="showSection('income')">💵 收入</button>
+
+<!-- ==================== -->
+<!-- 支出 -->
+<!-- ==================== -->
+<div id="expenseSection">
+
+<h2 class="section-title">💸 支出明細</h2>
+
+{% for e in expenses %}
+
+<div class="card expense">
+
+    <b>{{ e.category }}</b><br>
+    💰 {{ e.amount }}<br>
+    📝 {{ e.description }}<br>
+
+    {% if e.expense_type == "shared" %}
+        <span class="tag green">💑 共同支出</span>
+    {% else %}
+        <span class="tag gray">🧍 個人支出</span>
+    {% endif %}
+
+    <br><br>
+
+    <button onclick="deleteExpense({{ e.id }})">
+        🗑 刪除
+    </button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<!-- ==================== -->
+<!-- 收入 -->
+<!-- ==================== -->
+<div id="incomeSection" style="display:none;">
+
+<h2 class="section-title">💵 收入明細</h2>
+
+{% for i in incomes %}
+
+<div class="card income">
+
+    <b>{{ i.category }}</b><br>
+    💰 {{ i.amount }}<br>
+    📝 {{ i.note }}
+
+    <br><br>
+
+    <button onclick="deleteIncome({{ i.id }})">
+        🗑 刪除
+    </button>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<script>
+
+// 切換
+function showSection(type){
+
+    document.getElementById("expenseSection").style.display =
+        type === "expense" ? "block" : "none"
+
+    document.getElementById("incomeSection").style.display =
+        type === "income" ? "block" : "none"
+}
+
+// 刪除支出
+async function deleteExpense(id){
+
+    const res = await fetch(`/expenses/${id}`, {
+        method: "DELETE"
+    })
+
+    const data = await res.json()
+    alert(data.message)
+
+    location.reload()
+}
+
+// 刪除收入
+async function deleteIncome(id){
+
+    const res = await fetch(`/income/${id}`, {
+        method: "DELETE"
+    })
+
+    const data = await res.json()
+    alert(data.message)
+
+    location.reload()
+}
+
+</script>
+
+</body>
+</html>

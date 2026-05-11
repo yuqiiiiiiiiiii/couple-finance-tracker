@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>註冊</title>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#f4f6f9;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            height:100vh;
+            margin:0;
+        }
+
+        .box{
+            background:white;
+            padding:30px;
+            border-radius:12px;
+            box-shadow:0 5px 20px rgba(0,0,0,0.1);
+            width:340px;
+            text-align:center;
+        }
+
+        h1{
+            font-size:22px;
+            margin-bottom:20px;
+        }
+
+        input{
+            width:100%;
+            padding:10px;
+            margin:8px 0;
+            border:1px solid #ddd;
+            border-radius:8px;
+            outline:none;
+        }
+
+        input:focus{
+            border-color:#3498db;
+        }
+
+        button{
+            width:100%;
+            padding:10px;
+            border:none;
+            border-radius:8px;
+            cursor:pointer;
+            margin-top:10px;
+            background:#2ecc71;
+            color:white;
+            font-size:14px;
+        }
+
+        button:hover{
+            background:#27ae60;
+        }
+
+        a{
+            display:block;
+            margin-top:15px;
+            color:#555;
+            text-decoration:none;
+        }
+
+        a:hover{
+            color:black;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+    <h1>💑 註冊帳號</h1>
+
+    <form method="POST">
+
+        <input type="text" name="name" placeholder="名字" required>
+
+        <input type="email" name="email" placeholder="Email" required>
+
+        <input type="password" name="password" placeholder="密碼" required>
+
+        <button type="submit">
+            註冊
+        </button>
+
+    </form>
+
+    <a href="/login">
+        ← 回登入頁
+    </a>
+
+</div>
+
+</body>
+</html>

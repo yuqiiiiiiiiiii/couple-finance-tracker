@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>綁定關係</title>
+
+<style>
+
+body{
+    font-family: Arial;
+    background:linear-gradient(180deg,#f4f6f9,#eef2f7);
+    height:100vh;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* 卡片 */
+.box{
+    width:360px;
+    background:white;
+    padding:25px;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.08);
+    text-align:center;
+}
+
+/* 標題 */
+h1{
+    font-size:20px;
+    margin-bottom:15px;
+}
+
+/* input */
+input{
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border:1px solid #ddd;
+    border-radius:10px;
+    box-sizing:border-box;
+}
+
+input:focus{
+    border-color:#3498db;
+    outline:none;
+}
+
+/* button */
+button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:linear-gradient(135deg,#3498db,#5dade2);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+button:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 18px rgba(52,152,219,0.3);
+}
+
+/* message */
+#message{
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+/* link */
+a{
+    display:block;
+    margin-top:15px;
+    color:#555;
+    text-decoration:none;
+}
+
+a:hover{
+    color:black;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>💑 綁定情侶關係</h1>
+
+<div id="message"></div>
+
+<input id="user1_id" placeholder="User 1 ID">
+<input id="user2_id" placeholder="User 2 ID">
+
+<button onclick="createCouple()">綁定</button>
+
+<a href="/">⬅ 回首頁</a>
+
+</div>
+
+<script>
+
+function createCouple(){
+
+    const msg = document.getElementById("message")
+
+    msg.innerText = "處理中..."
+    msg.style.color = "#333"
+
+    fetch("/couple/create",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+            user1_id:document.getElementById("user1_id").value,
+            user2_id:document.getElementById("user2_id").value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        msg.innerText = data.message
+
+        if(data.couple_id){
+            msg.style.color = "green"
+
+            document.getElementById("user1_id").value = ""
+            document.getElementById("user2_id").value = ""
+        }
+        else{
+            msg.style.color = "red"
+        }
+    })
+    .catch(() => {
+        msg.innerText = "系統錯誤"
+        msg.style.color = "red"
+    })
+}
+
+</script>
+
+</body>
+</html>
