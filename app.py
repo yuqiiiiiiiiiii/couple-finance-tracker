@@ -118,7 +118,7 @@ def index():
 
     if user.couple_id:
 
-        # 🔸 支出（本月）
+        #支出（本月）
         expenses = Expense.query.filter(
             Expense.couple_id == user.couple_id,
             extract('year', Expense.created_at) == now.year,
@@ -129,7 +129,7 @@ def index():
             monthly["total"] += e.amount
             monthly["per_user"][e.user_id] = monthly["per_user"].get(e.user_id, 0) + e.amount
 
-        # 🔸 收入（全部）
+        #收入（全部）
         incomes = Income.query.filter_by(
             couple_id=user.couple_id
         ).all()
@@ -289,7 +289,7 @@ def couple_link_page():
 
 @app.route("/logout")
 def logout():
-    session.clear()   # 🔥 清掉 user_id / couple_id / user_name
+    session.clear()  #清掉 user_id / couple_id / user_name
     return redirect(url_for("login"))
 
 # =========================
@@ -486,8 +486,8 @@ def create_expense():
         category=data.get("category"),
         description=data.get("description"),
         expense_type=data.get("expense_type"),
-        split_ratio=float(data.get("split_ratio", 0.5))  # ⚠️ 這行也要修
-    )
+        split_ratio=float(data.get("split_ratio", 0.5)) 
+ )
 
     db.session.add(new_expense)
     db.session.commit()
@@ -502,8 +502,7 @@ def create_expense():
 def get_expenses():
 
     user_id = session.get("user_id")
-
-    # 👉 fallback（給 Postman 用）
+    
     if not user_id:
         user_id = request.args.get("user_id")
 
@@ -623,7 +622,7 @@ def expense_summary(couple_id):
         else:
             other_user = couple.user1_id
 
-    # 💡 淨額計算（關鍵）
+    #淨額計算
         balances[payer] += amount - payer_should_pay
         balances[other_user] -= other_should_pay
 
@@ -689,7 +688,7 @@ def update_expense(expense_id):
 
     data = request.json
 
-    # ✏️ 更新欄位（有傳才改，沒傳就維持原本）
+    #更新欄位（有傳才改，沒傳就維持原本）
     expense.amount = data.get("amount", expense.amount)
     expense.category = data.get("category", expense.category)
     expense.description = data.get("description", expense.description)
